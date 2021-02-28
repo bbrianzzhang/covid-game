@@ -37,6 +37,15 @@ def game_loop():
             x.set(0)
             word.set("Hey. I'm Andy from BuberEats, a startup for food delivery. We want to help deliver you food safely. If you're interested in our service, call me back at 510-291-2222 and you can use our service after a $100 deposit.")
             type_effect("n")
+        if time_tracker.get() == 300:
+            time_tracker.set(301)
+            while currently_typing.get():
+                print("")
+            x.set(0)
+            word.set(
+                "As the pandemic worsens,  you begin to feel more and more worried about the crisis. You start paying more attention to the news and keeping up with the COVID statistic websites.")
+            type_effect("n")
+            unlocked_dict["deaths"] = True
         # if random.randint(0, 10000) == 1 and key_actions["call_1"] == False:
         #     while currently_typing.get():
         #         print("")
@@ -61,6 +70,10 @@ def update_resources():
                     food_label.config(text="food: a bit")
                 elif resources_dict["food"] > 0:
                     food_label.config(text="food: low")
+            if key == "deaths":
+                death_label.grid(row=0, column=0)
+                new_stat = "COVID deaths: " + str(resources_dict["deaths"])
+                death_label.config(text=new_stat)
 
 def time_increment():
     while True:
@@ -69,6 +82,8 @@ def time_increment():
         if time_tracker.get()%3==0 and unlocked_dict["food"]:
             print(resources_dict["food"])
             resources_dict["food"]-=1
+        if time_tracker.get()%6==0 and unlocked_dict["deaths"]:
+            resources_dict["deaths"] += random.randint(time_tracker.get()//2, time_tracker.get())
 
 def type_effect(place_something):
     if x.get() == 0:
@@ -84,6 +99,7 @@ def type_effect(place_something):
                 unlocked_dict["money"] = True
                 go_work.place(x=20, y=130, width=150)
                 frame_stats.place(x=400, y=40)
+                frame_covid_stats.place(x=400, y=100)
             if call_number.winfo_ismapped() == False and place_something == "call":
                 call_number.place(x=20, y=160, width=150)
                 call_field.place(x=180, y=160)
@@ -175,12 +191,14 @@ word = StringVar(root, "The pandemic hits… Your office job is one of the few u
 
 resources_dict = {
     "money": 0,
-    "food": 10
+    "food": 10,
+    "deaths": 50,
 }
 
 unlocked_dict = {
     "money": False,
-    "food": False
+    "food": False,
+    "deaths": False,
 }
 
 key_actions = {
@@ -208,6 +226,11 @@ get_food_button = Button(root, text="buy food", command=get_food)
 order_food = Button(root, text="order food", command=order)
 
 frame_stats = LabelFrame(root, text="resources...",padx=5,pady=5)
+frame_covid_stats = LabelFrame(root, text="COVID stats", padx=5, pady=15)
+
+#COVID stat labels
+death_label = Label(frame_covid_stats, text="deaths: 30")
+hospital_capacity_label = Label(frame_covid_stats, text="hospital capacity: 90% full")
 
 # resource labels
 money_label = Label(frame_stats, text="money: 0")

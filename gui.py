@@ -30,20 +30,18 @@ def game_loop():
             type_effect("n")
         if resources_dict["food"] < -2:
             print("player died")
-        if time_tracker.get() > 60 and key_actions["call_0"] == True and random.randint(1,500) == 1 and currently_typing.get() == False and key_actions["call_1"] == False:
+        if time_tracker.get() > 60 and key_actions["call_0"] == True and random.randint(1,1000) == 1 and currently_typing.get() == False and key_actions["call_1"] == False:
             while currently_typing.get():
                 None
             x.set(0)
             word.set("Hey. I'm Andy from BuberEats, a startup for food delivery. We want to help deliver you food safely. If you're interested in our service, call me back at 510-291-2222 and you can use our service after a $100 deposit.")
             type_effect("n")
-<<<<<<< HEAD
-        if time_tracker.get() > 100 and key_actions["call_1"] == True and key_actions["call_0"] == True and random.randint(1,850) == 1 and key_actions["call_2"] == False:
+        if time_tracker.get() > 90 and key_actions["call_1"] == True and key_actions["call_0"] == True and random.randint(1,1000) == 1 and key_actions["call_2"] == False:
             while currently_typing.get():
                 None
             x.set(0)
-            word.set("This newest machine model will help you do your job! Call 1-800-696-3929 today to get your model for only $500.")
+            word.set("This newest machine model will help you do your job! Call 1-800-696-3929 today to get your model for only $250.")
             type_effect("n")
-=======
         if time_tracker.get() == 300:
             time_tracker.set(301)
             while currently_typing.get():
@@ -53,7 +51,7 @@ def game_loop():
                 "As the pandemic worsens,  you begin to feel more and more worried about the crisis. You start paying more attention to the news and keeping up with the COVID statistic websites.")
             type_effect("n")
             unlocked_dict["deaths"] = True
->>>>>>> 8888f8d014642d73725e561e0252a015bff2be44
+
         # if random.randint(0, 10000) == 1 and key_actions["call_1"] == False:
         #     while currently_typing.get():
         #         print("")
@@ -86,6 +84,8 @@ def update_resources():
 def time_increment():
     while True:
         time.sleep(1)
+        if key_actions["passive_income"]:
+            resources_dict["money"] += 10
         time_tracker.set(time_tracker.get()+1)
         if time_tracker.get()%3==0 and unlocked_dict["food"]:
             print(resources_dict["food"])
@@ -107,10 +107,10 @@ def type_effect(place_something):
                 unlocked_dict["money"] = True
                 go_work.place(x=20, y=130, width=150)
                 frame_stats.place(x=400, y=40)
-                frame_covid_stats.place(x=400, y=100)
+                frame_covid_stats.place(x=600, y=40)
             if call_number.winfo_ismapped() == False and place_something == "call":
                 call_number.place(x=20, y=160, width=150)
-                call_field.place(x=180, y=160)
+                call_field.place(x=180, y=160, width=150)
             if place_something == "call_0":
                 x.set(0)
                 word.set("Hello? God, you finally picked up. It's nuts out there, huh? Nobody knows what to expect anymore. Just look out for yourself and try not to go out too much... You might get it just from a trip to the grocers.")
@@ -127,8 +127,9 @@ def type_effect(place_something):
                 type_effect('none')
             if place_something == "call_2":
                 x.set(0)
-                if resources_dict["money"] >= 500:
-                    resources_dict["money"] -= 100
+                if resources_dict["money"] >= 250:
+                    resources_dict["money"] -= 250
+                    key_actions["passive_income"] = True
                     word.set("Now any tedious office work is completed effortlessly.")
                 else:
                     word.set("Can't pay? Get lost!")
@@ -220,14 +221,12 @@ word = StringVar(root, "The pandemic hits… Your office job is one of the few u
 
 resources_dict = {
     "money": 0,
-    "food": 10
     "food": 10,
     "deaths": 50,
 }
 
 unlocked_dict = {
     "money": False,
-    "food": False
     "food": False,
     "deaths": False,
 }
@@ -236,7 +235,8 @@ unlocked_dict = {
 key_actions = {
     "call_0": False,
     "call_1": False,
-    "call_2": False
+    "call_2": False,
+    "passive_income": False
 }
 
 currently_typing = BooleanVar(root, False)

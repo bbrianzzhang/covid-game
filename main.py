@@ -7,6 +7,7 @@ covidChanceGroceries = 20
 covidChanceWork = 5
 foodDelivery = False
 government = True
+investment = False
 
 
 def receive_input():
@@ -16,7 +17,7 @@ def receive_input():
         possible_actions += command + " "
     print("Choose an action: " + possible_actions)
     while True:
-        user_input = input("Choose an action")
+        user_input = input()
         if user_input in commands:
             return user_input
         else:
@@ -24,7 +25,7 @@ def receive_input():
 
 
 def check_conditions():
-    global money, foodDelivery, days
+    global money, foodDelivery, days, investment
     if money > 15000 and foodDelivery == False:
         answer = input("You are given the opportunity to invest in a food delivery company. Would you like to invest $5000? ("
               "Y/N)")
@@ -32,10 +33,14 @@ def check_conditions():
             print("Money invested.")
             money -= 5000
             foodDelivery = True
-    if days > 50:
+    if money>20000 and investment == False:
+        print("Your financial advisor offers you an opportunity to invest.")
+        investment = True
+    if days == 50:
         print("You are encouraged by a co-worker to run for government.")
         print("It costs $50000 to run.")
         commands.append("run for government")
+
 
 
 def run_for_government():

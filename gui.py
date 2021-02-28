@@ -30,12 +30,17 @@ def game_loop():
             type_effect("n")
         if resources_dict["food"] < -2:
             print("player died")
-        if time_tracker.get() == 90 and key_actions["call_0"] == True:
-            time_tracker.set(91)
+        if time_tracker.get() > 60 and key_actions["call_0"] == True and random.randint(1,500) == 1 and currently_typing.get() == False and key_actions["call_1"] == False:
             while currently_typing.get():
-                print("")
+                None
             x.set(0)
             word.set("Hey. I'm Andy from BuberEats, a startup for food delivery. We want to help deliver you food safely. If you're interested in our service, call me back at 510-291-2222 and you can use our service after a $100 deposit.")
+            type_effect("n")
+        if time_tracker.get() > 100 and key_actions["call_1"] == True and key_actions["call_0"] == True and random.randint(1,850) == 1 and key_actions["call_2"] == False:
+            while currently_typing.get():
+                None
+            x.set(0)
+            word.set("This newest machine model will help you do your job! Call 1-800-696-3929 today to get your model for only $500.")
             type_effect("n")
         # if random.randint(0, 10000) == 1 and key_actions["call_1"] == False:
         #     while currently_typing.get():
@@ -101,6 +106,18 @@ def type_effect(place_something):
                 else:
                     word.set("sorry dawg we dont fuck with broke bros")
                 type_effect('none')
+            if place_something == "call_2":
+                x.set(0)
+                if resources_dict["money"] >= 500:
+                    resources_dict["money"] -= 100
+                    word.set("Now any tedious office work is completed effortlessly.")
+                else:
+                    word.set("Can't pay? Get lost!")
+                type_effect("none")
+            if place_something == "contacted":
+                x.set(0)
+                word.set("You've already contacted us and made a sweet deal!")
+                type_effect('n')
             if place_something == "done call 0":
                 get_food_button.place(x=20, y=190, width=150)
             if place_something == "bad call":
@@ -119,7 +136,7 @@ def catch_covid(chance):
             resources_dict["money"] -= 1000
         else:
             resources_dict["money"] = 0
-
+        type_effect("none")
 
 def work():
     go_work["state"] = DISABLED
@@ -145,8 +162,17 @@ def call():
             key_actions["call_0"] = True
             type_effect("call_0")
         elif input_number_num == "5102912222":
-            key_actions["call_1"] = True
-            type_effect("call_1")
+            if key_actions["call_1"]:
+                type_effect("contacted")
+            else:
+                key_actions["call_1"] = True
+                type_effect("call_1")
+        elif input_number_num == "18006963929":
+            if key_actions["call_2"]:
+                type_effect("contacted")
+            else:
+                key_actions["call_2"] = True
+                type_effect("call_2")
         else:
             type_effect("bad call")
     else:
@@ -164,7 +190,7 @@ def get_food():
         resources_dict["money"] -= 5
 
 def order():
-    resources_dict["food"] = 200
+    resources_dict["food"] = 125
     if resources_dict["money"] >= 50:
         resources_dict["money"] -= 50
 
@@ -185,7 +211,8 @@ unlocked_dict = {
 
 key_actions = {
     "call_0": False,
-    "call_1": False
+    "call_1": False,
+    "call_2": False
 }
 
 currently_typing = BooleanVar(root, False)

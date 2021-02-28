@@ -46,7 +46,7 @@ def call():
     return
 
 root = Tk()
-root.title("covid adventure game")
+root.title("COVID Adventure Game")
 root.geometry("960x540")
 word = StringVar(root, "The pandemic hits… Your office job is one of the few unaffected. You're content as you continue to go to work…")
 

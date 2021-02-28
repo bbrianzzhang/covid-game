@@ -119,22 +119,36 @@ while True:
             if gameResources["money"] < 50000:
                 print("You do not have enough money to build the vaccine research facility")
             elif gameResources["scientists"] < 10:
-                print("You have not hired enough scientists to build the vaccine research facility")
+                print("You have not hired enough scientists to run the vaccine research facility")
             else:
-                pass
+                commands.append("research vaccines")
+                commands.append("build vaccine distribution center")
+                commands.remove("create vaccine research facility")
+                gameResources["money"] -= 50000
+                gameResources["scientists"] -= 10
         elif action == 'create mask production facility':
             if gameResources["money"] < 20000:
-                print("You do not have enough money to build the vaccine research facility")
+                print("You do not have enough money to build the mask production facility")
             elif gameResources["scientists"] < 10:
-                print("You have not hired enough scientists to build the vaccine research facility")
+                print("You have not hired enough scientists to run the vaccine production facility")
             else:
-                pass
+                commands.append("create masks")
+                commands.append("create mask distribution center")
+                commands.remove("create mask production facility")
+                gameResources["money"] -= 20000
+                gameResources["scientists"] -= 10
         elif action == 'build COVID testing center':
             if gameResources["money"] < 30000:
-                print("You do not have enough money to build the vaccine research facility")
+                print("You do not have enough money to build the COVID testing center")
             elif gameResources["scientists"] < 10:
-                print("You have not hired enough scientists to build the vaccine research facility")
+                print("You have not hired enough scientists to run the COVID testing center")
             else:
-                pass
+                commands.remove("build COVID testing center")
+                gameResources["money"] -= 30000
+                gameResources["scientists"] -= 10
+                print("After building the COVID testing center, the chance of you catching COVID will go down "
+                      "significantly as people will be more aware if they have the virus or not.")
+                covidChanceGroceries = 5
+                covidChanceWork = 1
     if gameResources["days"] % 7 == 0:
         get_groceries()

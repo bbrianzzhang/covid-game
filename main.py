@@ -1,17 +1,22 @@
 import random
 
 commands = ['go to work', 'end day']
-money = 100000
-days = 0
+gameResources = {
+    "money": 10000,
+    "days": 0,
+    "scientists": 0,
+    "research": 0,
+}
+gameState = {
+    "food_delivery": False,
+    "government": False,
+    "investment": False,
+}
 covidChanceGroceries = 20
 covidChanceWork = 5
-foodDelivery = False
-government = True
-investment = False
 
 
 def receive_input():
-    global days
     possible_actions = ""
     for command in commands:
         possible_actions += command + " "
@@ -25,49 +30,45 @@ def receive_input():
 
 
 def check_conditions():
-    global money, foodDelivery, days, investment
-    if money > 15000 and foodDelivery == False:
-        answer = input("You are given the opportunity to invest in a food delivery company. Would you like to invest $5000? ("
-              "Y/N)")
+    if gameResources["money"] > 15000 and not gameState["food_delivery"]:
+        answer = input(
+            "You are given the opportunity to invest in a food delivery company. Would you like to invest $5000? ("
+            "Y/N)")
         if answer == "Y":
             print("Money invested.")
-            money -= 5000
-            foodDelivery = True
-    if money>20000 and investment == False:
+            gameResources["money"] -= 5000
+            gameState["food_delivery"] = True
+    if gameResources["money"] > 20000 and not gameState["investment"]:
         print("Your financial advisor offers you an opportunity to invest.")
-        investment = True
-    if days == 50:
+        gameState["investment"] = True
+    if gameResources["days"] == 50:
         print("You are encouraged by a co-worker to run for government.")
         print("It costs $50000 to run.")
         commands.append("run for government")
 
 
-
 def run_for_government():
-    global money, government
-    money -= 50000
+    gameResources["money"] -= 50000
     x = random.randint(1, 2)
-    if x==1:
+    if x == 1:
         print("Your campaign was not successful. You must try again another day.")
     else:
         print("Your campaign was successful! Congratulations.")
         print("You now have more options in your daily life.")
-        government = True
+        gameState["government"] = True
         commands.append("create mask production facility")
         commands.append("create COVID testing center")
         commands.append("create vaccine research center")
 
 
-
 def get_groceries():
     print("You go outside to get groceries.")
-    global money
-    money -= 200
+    gameResources["money"] -= 200
     x = random.randint(0, 100)
-    if foodDelivery:
+    if gameState["food_delivery"]:
         if input("Would you like to order your groceries instead? It will cost extra money but you have no chance of "
                  "getting COVID (Y/N)") == "Y":
-            money -= 50
+            gameResources["money"] -= 50
             print("You ordered groceries online.")
             return
         else:
@@ -75,29 +76,28 @@ def get_groceries():
 
     if x < covidChanceGroceries:
         print("While outside, you caught COVID. You recover, but the price is high.")
-        money -= 5000
+        gameResources["money"] -= 5000
 
 
 def work():
-    global money
-    money += 600
+    gameResources["money"] += 600
     x = random.randint(0, 100)
     if x < covidChanceWork:
         print("While outside, you caught COVID. You recover, but the price is high.")
-        money -= 5000
+        gameResources["money"] -= 5000
 
 
 while True:
     dayOver = False
-    print("Day " + str(days))
-    print("You have " + str(money) + " money.")
+    print("Day " + str(gameResources["days"]))
+    print("You have " + str(gameResources["money"]) + " money.")
     canWork = True
     check_conditions()
     while not dayOver:
         action = receive_input()
         if action == 'end day':
             dayOver = True
-            days += 1
+            gameResources["days"] += 1
         elif action == 'go to work':
             if canWork:
                 work()
@@ -105,9 +105,36 @@ while True:
             else:
                 print("You already went to work.")
         elif action == 'run for government':
-            if money > 50000:
+            if gameResources["money"] > 50000:
                 run_for_government()
             else:
                 print("You do not have enough money to run for government.")
-    if days % 7 == 0:
+        elif action == 'hire scientist':
+            if gameResources["money"] > 200:
+                print("You have hired a scientist. They will help with COVID-related buildings")
+                gameResources["scientists"] += 1
+            else:
+                print("You do not have enough money to hire a scientist")
+        elif action == 'create vaccine research facility':
+            if gameResources["money"] < 50000:
+                print("You do not have enough money to build the vaccine research facility")
+            elif gameResources["scientists"] < 10:
+                print("You have not hired enough scientists to build the vaccine research facility")
+            else:
+                pass
+        elif action == 'create mask production facility':
+            if gameResources["money"] < 20000:
+                print("You do not have enough money to build the vaccine research facility")
+            elif gameResources["scientists"] < 10:
+                print("You have not hired enough scientists to build the vaccine research facility")
+            else:
+                pass
+        elif action == 'build COVID testing center':
+            if gameResources["money"] < 30000:
+                print("You do not have enough money to build the vaccine research facility")
+            elif gameResources["scientists"] < 10:
+                print("You have not hired enough scientists to build the vaccine research facility")
+            else:
+                pass
+    if gameResources["days"] % 7 == 0:
         get_groceries()
